@@ -11,7 +11,11 @@ def main():
 
 	x = SCREEN_WIDTH / 2
 	y = SCREEN_HEIGHT / 2
-	player = Player(x, y)
+	
+	updatable = pygame.sprite.Group()
+	drawable = pygame.sprite.Group()
+
+	player = Player(x, y, updatable , drawable)
 
 	clock = pygame.time.Clock()
 	dt = clock.tick(60)
@@ -23,8 +27,9 @@ def main():
 				pygame.quit()
 				return
 		screen.fill((0, 0, 0))
-		player.update(dt)
-		player.draw(screen)
+		updatable.update(dt)
+		for x in drawable:
+			x.draw(screen)
 		clock.tick(60)
 		pygame.display.flip()
 
