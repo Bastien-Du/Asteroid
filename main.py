@@ -44,7 +44,7 @@ def main():
 		for asteroid in asteroids:
 			for b in bullet:
 				if asteroid.collision(b):
-					asteroid.kill()
+					asteroid.split()
 					b.kill()
 
 		for asteroid in asteroids:
