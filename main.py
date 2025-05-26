@@ -4,6 +4,8 @@ from constants import *
 from player import *
 from asteroidfield import *
 from asteroid import *
+from bullet import *
+from circleshape import *
 
 def main():
 	pygame.init()
@@ -40,6 +42,12 @@ def main():
 		screen.fill((0, 0, 0))
 
 		for asteroid in asteroids:
+			for b in bullet:
+				if asteroid.collision(b):
+					asteroid.kill()
+					b.kill()
+
+		for asteroid in asteroids:
 			if asteroid.collision(player):
 				print("Game Over")
 				sys.exit()
@@ -47,6 +55,8 @@ def main():
 		for x in drawable:
 			x.draw(screen)
 		pygame.display.flip()
+
+
 
 		dt = clock.tick(60) / 1000
 
