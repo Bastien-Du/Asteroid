@@ -1,6 +1,6 @@
 import pygame
 from constants import *
-from circleshape import CircleShape
+from circleshape import *
 from bullet import *
 
 
@@ -37,6 +37,9 @@ class Player(CircleShape):
 			self.shoot()
 
 		self.timer -= dt
+
+		self.wrap_position()
+
 
 	def rotate(self, dt):
 		self.rotation += PLAYER_TURN_SPEED * dt

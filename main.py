@@ -68,7 +68,7 @@ def main():
 		for x in drawable:
 			x.draw(screen)
 		pygame.draw.rect(screen, "black", pygame.Rect(0, 0, SCREEN_WIDTH, 50))
-		lives_surface = lives_police.render('Live(s): ' + str(lives-1), False, (255,255,255))
+		lives_surface = lives_police.render('Live(s): ' + str(lives-1), False, "red")
 		screen.blit(lives_surface,(SCREEN_WIDTH - 150,10))
 		score_surface = score_police.render('Score: '+ str(score), False, (255,255,255))
 		screen.blit(score_surface, (10,10))
