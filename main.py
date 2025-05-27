@@ -31,8 +31,10 @@ def main():
 
 	dt = 0
 	score = 0
+	lives = 3
 
 	score_police = pygame.font.SysFont('arial', 30)
+	lives_police = pygame.font.SysFont('arial', 30)
 
 	while True:
 		for event in pygame.event.get():
@@ -51,15 +53,27 @@ def main():
 					score += 10
 
 		for asteroid in asteroids:
-			if asteroid.collision(player):
-				print("Game Over")
-				sys.exit()
+				if asteroid.collision(player) and player.immunity_time <= 0:
+					lives -= 1
+					player.kill()
+					if lives > 0:
+						player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+						player.immunity_time = PLAYER_IMMUNITY_TIME
+					if lives == 0:
+						print("Game Over")
+						sys.exit()
+
+		player.immunity_time -= dt
 
 		for x in drawable:
 			x.draw(screen)
 		pygame.draw.rect(screen, "black", pygame.Rect(0, 0, SCREEN_WIDTH, 50))
+		lives_surface = lives_police.render('Live(s): ' + str(lives-1), False, (255,255,255))
+		screen.blit(lives_surface,(SCREEN_WIDTH - 150,10))
 		score_surface = score_police.render('Score: '+ str(score), False, (255,255,255))
 		screen.blit(score_surface, (10,10))
+
+
 
 		pygame.display.flip()
 
