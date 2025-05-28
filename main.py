@@ -7,15 +7,17 @@ from asteroid import *
 from bullet import *
 from circleshape import *
 
+big_font = None
+medium_font = None
+small_font = None
+score = 0
 
 def show_menu(screen):
 	running = True
-	big_font = pygame.font.SysFont(None, 200)
-	small_font = pygame.font.SysFont(None, 80)
 	screen.fill("black")
 	title = big_font.render("ASTEROID", True, "white")
 	title_x = (SCREEN_WIDTH - title.get_width()) // 2
-	title_button = screen.blit(title, (title_x, SCREEN_HEIGHT/4))
+	screen.blit(title, (title_x, SCREEN_HEIGHT/4))
 	play = small_font.render("PLAY", True, "white")
 	play_x = (SCREEN_WIDTH // 3 - play.get_width() // 2)
 	play_button = screen.blit(play, (play_x, (SCREEN_HEIGHT*2)/3))
@@ -32,8 +34,7 @@ def show_menu(screen):
 			if event.type == pygame.MOUSEBUTTONDOWN:
 				if play_button.collidepoint(event.pos):
 					running = False
-				else:
-					quit_button.collidepoint(event.pos)
+				if quit_button.collidepoint(event.pos):
 					return False
 	return True
 
@@ -56,8 +57,8 @@ def game_runnning():
 	player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
 
 	dt = 0
-	score = 0
 	lives = 3
+	global score
 
 	score_police = pygame.font.SysFont('arial', 30)
 	lives_police = pygame.font.SysFont('arial', 30)
@@ -87,13 +88,10 @@ def game_runnning():
 						player.immunity_time = PLAYER_IMMUNITY_TIME
 					if lives == 0:
 						lives = 3
-						score = 0
 						asteroids.empty()
 						drawable.empty()
 						updatable.empty()
 						return
-
-
 
 		player.immunity_time -= dt
 
@@ -105,22 +103,59 @@ def game_runnning():
 		screen.blit(lives_surface,(SCREEN_WIDTH - 150,10))
 		score_surface = score_police.render('Score: '+ str(score), False, (255,255,255))
 		screen.blit(score_surface, (10,10))
-
-
 		pygame.display.flip()
-
-
 
 		dt = clock.tick(60) / 1000
 
+def game_ending():
+	running = True
+	global score
+	screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+	screen.fill("black")
+	dead = big_font.render("GAME OVER !", True, "white")
+	dead_x = (SCREEN_WIDTH - dead.get_width()) // 2
+	screen.blit(dead, (dead_x, SCREEN_HEIGHT/4))
+	final_score = medium_font.render(f"FINAL SCORE: {score}", True, "white")
+	score_x = ((SCREEN_WIDTH - final_score.get_width()) // 2)
+	screen.blit(final_score,(score_x, SCREEN_HEIGHT/2))
+	try_again = small_font.render("TRY AGAIN", True, "white")
+	try_again_x = (SCREEN_WIDTH // 3 - try_again.get_width() // 2)
+	try_again_button = screen.blit(try_again, (try_again_x, (SCREEN_HEIGHT*2)/3))
+	quit = small_font.render("QUIT", True, "white")
+	quit_x = (((SCREEN_WIDTH*2)/3) - quit.get_width() // 2)
+	quit_button = screen.blit(quit,(quit_x,(SCREEN_HEIGHT*2)/3))
+	pygame.display.flip()
+
+	while running:
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				pygame.quit()
+				return False
+			if event.type == pygame.MOUSEBUTTONDOWN:
+					if try_again_button.collidepoint(event.pos):
+						score = 0
+						running = False
+					if quit_button.collidepoint(event.pos):
+						return False
+	return True
+
 def main():
+	global big_font, medium_font, small_font, score
 	pygame.init()
 	pygame.font.init()
 	screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-	menu = show_menu(screen)
-	if  menu == True:
-		game_runnning()
-
+	big_font = pygame.font.SysFont(None, 200)
+	small_font = pygame.font.SysFont(None, 80)
+	medium_font = pygame.font.SysFont(None, 120)
+	running = True
+	while running:
+		menu = show_menu(screen)
+		if  menu == True:
+			game_runnning()
+		end_menu = game_ending()
+		if end_menu == False:
+			running = False
+	return True
 
 if __name__ == "__main__":
     main()
