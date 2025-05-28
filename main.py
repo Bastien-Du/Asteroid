@@ -10,10 +10,18 @@ from circleshape import *
 
 def show_menu(screen):
 	running = True
-	font = pygame.font.SysFont(None, 72)
+	big_font = pygame.font.SysFont(None, 200)
+	small_font = pygame.font.SysFont(None, 80)
 	screen.fill("black")
-	text = font.render("Press SPACE to Start", True, "white")
-	screen.blit(text, (400, 300))   # Adjust as you like
+	title = big_font.render("ASTEROID", True, "white")
+	title_x = (SCREEN_WIDTH - title.get_width()) // 2
+	title_button = screen.blit(title, (title_x, SCREEN_HEIGHT/4))
+	play = small_font.render("PLAY", True, "white")
+	play_x = (SCREEN_WIDTH // 3 - play.get_width() // 2)
+	play_button = screen.blit(play, (play_x, (SCREEN_HEIGHT*2)/3))
+	quit = small_font.render("QUIT", True, "white")
+	quit_x = (((SCREEN_WIDTH*2)/3) - quit.get_width() // 2)
+	quit_button = screen.blit(quit,(quit_x,(SCREEN_HEIGHT*2)/3))
 	pygame.display.flip()
 
 	while running:
@@ -21,8 +29,12 @@ def show_menu(screen):
 			if event.type == pygame.QUIT:
 				pygame.quit()
 				return False     # Player closed window
-			if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-				running = False # Player pressed SPACE to start
+			if event.type == pygame.MOUSEBUTTONDOWN:
+				if play_button.collidepoint(event.pos):
+					running = False
+				else:
+					quit_button.collidepoint(event.pos)
+					return False
 	return True
 
 def game_runnning():
