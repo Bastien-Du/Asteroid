@@ -24,6 +24,9 @@ def show_menu(screen):
 	quit = small_font.render("QUIT", True, "white")
 	quit_x = (((SCREEN_WIDTH*2)/3) - quit.get_width() // 2)
 	quit_button = screen.blit(quit,(quit_x,(SCREEN_HEIGHT*2)/3))
+	weapon = small_font.render("WEAPON", True, "white")
+	weapon_x = ((SCREEN_WIDTH // 3) - quit.get_width() // 2)
+	weapon_button = screen.blit(weapon,(weapon_x,(SCREEN_HEIGHT*2)/3 + 120 ))
 	pygame.display.flip()
 
 	while running:
@@ -34,6 +37,10 @@ def show_menu(screen):
 			if event.type == pygame.MOUSEBUTTONDOWN:
 				if play_button.collidepoint(event.pos):
 					running = False
+				if weapon_button.collidepoint(event.pos):
+					result = weapon_menu()
+					if result == "back":
+						show_menu(screen)
 				if quit_button.collidepoint(event.pos):
 					return False
 	return True
@@ -107,6 +114,35 @@ def game_runnning():
 
 		dt = clock.tick(60) / 1000
 
+def weapon_menu():
+	running = True
+	screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+	screen.fill("black")
+	basic = medium_font.render("BASIC", True, "white")
+	basic_x = ((SCREEN_WIDTH/4) - basic.get_width() // 2 )
+	basic_button = screen.blit(basic, (basic_x, (SCREEN_HEIGHT/4)))
+	shotgun = medium_font.render("SHOTGUN", True, "white")
+	shotgun_x = (((SCREEN_WIDTH*3)/4) - shotgun.get_width() // 2 )
+	shotgun_button = screen.blit(shotgun, (shotgun_x, (SCREEN_HEIGHT/4)))
+	orbital = medium_font.render("ORBITAL", True, "white")
+	orbital_x = ((SCREEN_WIDTH/4) - orbital.get_width() // 2 )
+	orbital_button = screen.blit(orbital, (orbital_x, ((SCREEN_HEIGHT*3)/4)))
+	back = small_font.render("BACK", True, "white")
+	back_x =((SCREEN_WIDTH) - back.get_width())
+	back_button = screen.blit(back, (back_x - 50, SCREEN_HEIGHT - 100))
+	pygame.display.flip()
+
+	while running:
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				pygame.quit()
+			if event.type == pygame.MOUSEBUTTONDOWN:
+				if back_button.collidepoint(event.pos):
+					running = False
+
+	return "back"
+
+
 def game_ending():
 	running = True
 	global score
@@ -152,6 +188,8 @@ def main():
 		menu = show_menu(screen)
 		if  menu == True:
 			game_runnning()
+		if menu == False:
+			sys.exit()
 		end_menu = game_ending()
 		if end_menu == False:
 			running = False
@@ -159,3 +197,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
